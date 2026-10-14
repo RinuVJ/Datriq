@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Trash2, Edit3, ArrowUp, ArrowDown, Upload, Lock, GraduationCap } from 'lucide-react';
+import { Trash2, Edit3, ArrowUp, ArrowDown, Lock } from 'lucide-react';
+import defaultCollegeLogoUrl from '../assets/SJU-NEW-LOGO-HEADER.png';
 
 export const DatriqLogo = ({ customLogoUrl, size = 'md', showTagline = true }) => {
   const dimensions = {
@@ -84,45 +85,22 @@ export const DatriqLogo = ({ customLogoUrl, size = 'md', showTagline = true }) =
 };
 
 /**
- * Renders either the admin-uploaded official St. Joseph's University logo
- * or a respectful temporary placeholder badge until the administrator uploads it.
+ * Renders the admin-uploaded university logo or the bundled official logo.
  */
-export const CollegeLogoBadge = ({ customCollegeLogoUrl, onOpenUploadModal, size = 'md' }) => {
+export const CollegeLogoBadge = ({ customCollegeLogoUrl, size = 'md' }) => {
   const heightClass = {
     sm: 'h-9',
     md: 'h-11',
     lg: 'h-16'
   }[size] || 'h-11';
 
-  if (customCollegeLogoUrl) {
-    return (
-      <div className="flex items-center gap-2 bg-white/95 px-3 py-1.5 rounded-xl border border-cyan-400/30 shadow-md">
-        <img
-          src={customCollegeLogoUrl}
-          alt="St. Joseph's University Official Logo"
-          className={`${heightClass} w-auto object-contain`}
-        />
-      </div>
-    );
-  }
-
   return (
-    <div
-      onClick={onOpenUploadModal}
-      title="Click to upload official St. Joseph's University & DATRIQ logos"
-      className="group cursor-pointer flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800/90 border border-dashed border-purple-400/40 hover:border-cyan-400/60 transition-all"
-    >
-      <div className="w-7 h-7 rounded-lg bg-purple-500/15 border border-purple-400/30 flex items-center justify-center text-purple-300 group-hover:text-cyan-300 transition-colors">
-        <GraduationCap className="w-4 h-4" />
-      </div>
-      <div className="flex flex-col text-left">
-        <span className="text-[11px] font-bold tracking-wider text-white leading-tight">
-          ST. JOSEPH'S UNIVERSITY
-        </span>
-        <span className="text-[9px] text-cyan-300/80 flex items-center gap-1">
-          <Upload className="w-2.5 h-2.5" /> Official Logo Slot (Admin Upload)
-        </span>
-      </div>
+    <div className="flex items-center justify-center bg-white px-2 py-1 rounded-md border border-slate-200/70">
+      <img
+        src={customCollegeLogoUrl || defaultCollegeLogoUrl}
+        alt="St. Joseph's University Official Logo"
+        className={`${heightClass} w-auto max-w-[240px] object-contain`}
+      />
     </div>
   );
 };

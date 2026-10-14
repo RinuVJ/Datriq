@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Sparkles, Trash2, GraduationCap } from 'lucide-react';
+import { Sparkles, Trash2, GraduationCap, LockKeyhole } from 'lucide-react';
 import { DatriqLogo, CollegeLogoBadge } from './components.jsx';
 import { TeamPage } from './team.jsx';
 import { compressImageFile } from './utils.js';
@@ -20,7 +20,8 @@ export function AdminDashboard({
   onSaveProject,
   onDeleteProject,
   inquiries,
-  showNotification
+  showNotification,
+  onLockAdmin
 }) {
   const [tab, setTab] = useState('branding');
   const [newEvt, setNewEvt] = useState({
@@ -56,6 +57,13 @@ export function AdminDashboard({
             Manage official logos, leadership team profiles, events, workshops, club projects, and student registrations in real time.
           </p>
         </div>
+        <button
+          type="button"
+          onClick={onLockAdmin}
+          className="inline-flex items-center justify-center gap-2 rounded-xl border border-rose-300/20 bg-rose-300/[0.06] px-4 py-2.5 text-xs font-semibold text-rose-200 transition hover:border-rose-300/40 hover:bg-rose-300/[0.1]"
+        >
+          <LockKeyhole className="h-4 w-4" /> Lock Admin
+        </button>
       </div>
 
       {/* Admin Sub-Navigation Tabs */}
@@ -126,12 +134,11 @@ export function AdminDashboard({
               <GraduationCap className="w-4 h-4 text-purple-400" /> St. Joseph's University Official Logo
             </h3>
             <p className="text-xs text-slate-400">
-              Upload the official St. Joseph's University header logo (`SJU-NEW-LOGO-HEADER.png`). Replaces the temporary placeholder across the website.
+              The bundled St. Joseph's University logo is used by default. Upload a replacement here to update it across the website.
             </p>
             <div className="p-4 rounded-2xl bg-[#050914] border border-slate-800 flex items-center justify-center min-h-[120px]">
               <CollegeLogoBadge
                 customCollegeLogoUrl={branding.collegeLogoUrl}
-                onOpenUploadModal={() => {}}
                 size="lg"
               />
             </div>
@@ -153,7 +160,7 @@ export function AdminDashboard({
                   onClick={() => onSaveBranding({ collegeLogoUrl: '' })}
                   className="px-3 py-1.5 rounded-lg bg-slate-800 text-xs text-red-300"
                 >
-                  Revert to Placeholder
+                  Restore Default University Logo
                 </button>
               )}
             </div>

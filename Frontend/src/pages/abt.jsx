@@ -1,7 +1,7 @@
 import { Plus } from 'lucide-react';
 import { DatriqLogo, CollegeLogoBadge } from './components.jsx';
 
-export function AboutPage({ branding, liveStats, projects, navigateTo, onOpenLogoModal }) {
+export function AboutPage({ branding, liveStats, projects, navigateTo }) {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
       {/* Header Banner */}
@@ -23,7 +23,6 @@ export function AboutPage({ branding, liveStats, projects, navigateTo, onOpenLog
             <DatriqLogo customLogoUrl={branding.datriqLogoUrl} size="md" showTagline={true} />
             <CollegeLogoBadge
               customCollegeLogoUrl={branding.collegeLogoUrl}
-              onOpenUploadModal={onOpenLogoModal}
               size="md"
             />
           </div>

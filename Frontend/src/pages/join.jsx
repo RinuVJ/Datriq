@@ -6,7 +6,6 @@ export function JoinClubPage({
   registeredMembers,
   onOpenRulesModal,
   onRegisterSuccess,
-  navigateTo,
   showNotification
 }) {
   const [formData, setFormData] = useState({
@@ -58,7 +57,7 @@ export function JoinClubPage({
 
     if (emailExists || rollExists) {
       setErrorMsg(
-        'An account with this Email or Student ID / Roll Number is already registered. Please log in instead.'
+        'An account with this Email or Student ID / Roll Number is already registered.'
       );
       return;
     }
@@ -357,16 +356,6 @@ export function JoinClubPage({
             {submitting ? 'Encrypting & Creating Membership...' : 'Complete Student Registration'}
           </button>
 
-          <p className="text-center text-slate-400 pt-2">
-            Already a registered member?{' '}
-            <button
-              type="button"
-              onClick={() => navigateTo('login')}
-              className="text-cyan-400 font-bold hover:underline"
-            >
-              Sign in here
-            </button>
-          </p>
         </form>
       </div>
     </div>
