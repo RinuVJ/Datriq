@@ -12,7 +12,6 @@ export function HomePage({
   navigateTo,
   onSelectEventForReg,
   onSelectGalleryItem,
-  onOpenLogoModal,
   onSubmitInquiry
 }) {
   const [contactForm, setContactForm] = useState({ name: '', email: '', subject: '', message: '' });
@@ -126,7 +125,6 @@ export function HomePage({
                   <div className="flex items-center gap-3">
                     <CollegeLogoBadge
                       customCollegeLogoUrl={branding.collegeLogoUrl}
-                      onOpenUploadModal={onOpenLogoModal}
                       size="md"
                     />
                   </div>

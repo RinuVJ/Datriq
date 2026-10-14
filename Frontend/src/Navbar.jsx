@@ -1,5 +1,20 @@
-import { Award, LogOut, Menu, Shield, Sparkles, Upload, UserCheck, X } from 'lucide-react';
-import { DatriqLogo, CollegeLogoBadge } from './pages/components.jsx';
+import {
+  ArrowRight,
+  Award,
+  CalendarDays,
+  Images,
+  LogOut,
+  Menu,
+  MessageCircle,
+  Shield,
+  Sparkles,
+  UserCheck,
+  Users,
+  Home,
+  X,
+} from "lucide-react";
+
+import { DatriqLogo, CollegeLogoBadge } from "./pages/components.jsx";
 
 export function Navbar({
   activePage,
@@ -10,230 +25,346 @@ export function Navbar({
   setMobileMenuOpen,
   userDropdownOpen,
   setUserDropdownOpen,
-  setLogoUploadModalOpen,
-  setIsAdminMode,
   setMemberIdCardModalOpen,
   setCurrentUser,
   showNotification,
-  navigateTo
+  navigateTo,
 }) {
+  const iconFor = (id) => {
+    const icons = {
+      home: Home,
+      about: Sparkles,
+      team: Users,
+      events: CalendarDays,
+      calendar: CalendarDays,
+      gallery: Images,
+      contact: MessageCircle,
+      join: ArrowRight,
+    };
+    return icons[id] || Sparkles;
+  };
+
   return (
     <>
-      {/* Top Institutional Sub-Header Bar */}
-      <div className="relative z-30 bg-[#03060E] border-b border-slate-800/80 px-4 py-1.5 text-xs">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2 text-slate-300">
-            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 font-semibold text-[11px]">
-              <Sparkles className="w-3 h-3" /> Official Tech Community
+      {/* Slim institutional strip */}
+      <div className="relative z-40 border-b border-cyan-400/10 bg-[#030711]">
+        <div className="mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-2 sm:px-6 lg:px-8">
+          <div className="flex min-w-0 items-center gap-2.5 text-[11px] sm:text-xs">
+            <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-cyan-400/20 bg-cyan-400/[0.07] px-2.5 py-1 font-semibold tracking-wide text-cyan-200">
+              <Sparkles className="h-3.5 w-3.5" />
+              Official Tech Community
             </span>
-            <span className="hidden sm:inline text-slate-400">|</span>
-            <span className="font-medium text-slate-200">
-              St. Joseph's University — DATRIQ Data Science Club
+            <span className="hidden text-slate-700 sm:inline">/</span>
+            <span className="hidden truncate text-slate-400 sm:inline">
+              St. Joseph&apos;s University <span className="text-slate-600">·</span>{" "}
+              <span className="text-slate-200">DATRIQ Data Science Club</span>
             </span>
           </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setLogoUploadModalOpen(true)}
-              className="text-cyan-400 hover:text-cyan-300 flex items-center gap-1 font-medium transition-colors"
-            >
-              <Upload className="w-3 h-3" /> Upload Official Logos
-            </button>
-            <span className="text-slate-600">|</span>
-            <button
-              onClick={() => {
-                setIsAdminMode(true);
-                navigateTo('admin');
-              }}
-              className={`flex items-center gap-1 font-semibold px-2.5 py-0.5 rounded-md transition-all ${
-                activePage === 'admin'
-                  ? 'bg-purple-600 text-white shadow-sm'
-                  : 'bg-purple-500/15 text-purple-300 hover:bg-purple-500/25 border border-purple-500/30'
-              }`}
-            >
-              <Shield className="w-3 h-3" /> Admin Management System
-            </button>
-          </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              navigateTo("admin");
+            }}
+            className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[11px] font-semibold transition duration-200 ${
+              activePage === "admin"
+                ? "border-violet-400/50 bg-violet-500 text-white"
+                : "border-violet-400/20 bg-violet-400/[0.07] text-violet-200 hover:border-violet-300/50 hover:bg-violet-400/15"
+            }`}
+          >
+            <Shield className="h-3.5 w-3.5" />
+            Admin Management
+          </button>
         </div>
       </div>
 
-      {/* Main Sticky Navigation Header */}
-      <header className="sticky top-0 z-30 backdrop-blur-xl bg-[#060B19]/90 border-b border-cyan-500/15 shadow-lg shadow-black/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-3">
-          {/* Dual Brand Logos: DATRIQ + St. Joseph's University */}
-          <div className="flex items-center gap-3 sm:gap-4">
-            <div onClick={() => navigateTo('home')} className="cursor-pointer">
-              <DatriqLogo customLogoUrl={branding.datriqLogoUrl} size="sm" showTagline={true} />
-            </div>
-            <div className="hidden md:block h-8 w-[1px] bg-slate-800" />
-            <div className="hidden sm:block">
+      {/* Main navigation */}
+      <header className="sticky top-0 z-30 border-b border-cyan-300/15 bg-[#050a15]/95 shadow-[0_12px_35px_rgba(0,0,0,0.24)] backdrop-blur-2xl">
+        <div className="mx-auto flex min-h-[78px] max-w-[1600px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+          {/* Brand group */}
+          <div className="flex min-w-0 shrink-0 items-center gap-3 sm:gap-4 lg:gap-5">
+            <button
+              type="button"
+              onClick={() => navigateTo("home")}
+              aria-label="DATRIQ home"
+              className="shrink-0 rounded-xl transition duration-200 hover:opacity-85 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300"
+            >
+              <DatriqLogo
+                customLogoUrl={branding.datriqLogoUrl}
+                size="sm"
+                showTagline={true}
+              />
+            </button>
+
+            <span className="hidden h-10 w-px bg-gradient-to-b from-transparent via-slate-700 to-transparent lg:block" />
+
+            <div className="hidden shrink-0 sm:block">
               <CollegeLogoBadge
                 customCollegeLogoUrl={branding.collegeLogoUrl}
-                onOpenUploadModal={() => setLogoUploadModalOpen(true)}
                 size="sm"
               />
             </div>
           </div>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden xl:flex items-center gap-1">
+          {/* Desktop navigation */}
+          <nav
+            aria-label="Main navigation"
+            className="hidden min-w-0 flex-1 items-center justify-center gap-1 xl:flex 2xl:gap-2"
+          >
             {navItems.map((item) => {
               const isActive = activePage === item.id;
-              if (item.id === 'join') {
+              const Icon = iconFor(item.id);
+
+              if (item.id === "join") {
                 return (
                   <button
                     key={item.id}
+                    type="button"
                     onClick={() => navigateTo(item.id)}
-                    className={`ml-1 px-3.5 py-2 rounded-xl text-xs font-bold tracking-wide transition-all ${
+                    className={`group ml-1 inline-flex shrink-0 items-center justify-center gap-2 rounded-xl px-4 py-3 text-xs font-bold tracking-wide text-slate-950 shadow-lg shadow-cyan-500/10 transition duration-200 hover:-translate-y-0.5 hover:shadow-cyan-500/25 ${
                       isActive
-                        ? 'bg-cyan-400 text-slate-950 shadow-lg shadow-cyan-500/30'
-                        : 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 shadow-md shadow-cyan-500/15'
+                        ? "bg-cyan-300"
+                        : "bg-gradient-to-r from-cyan-400 via-sky-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400"
                     }`}
                   >
                     {item.label}
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                   </button>
                 );
               }
+
               return (
                 <button
                   key={item.id}
+                  type="button"
                   onClick={() => navigateTo(item.id)}
-                  className={`px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
+                  aria-current={isActive ? "page" : undefined}
+                  className={`relative inline-flex shrink-0 items-center justify-center gap-2 rounded-xl px-3 py-3 text-xs font-semibold transition duration-200 2xl:px-3.5 ${
                     isActive
-                      ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30'
-                      : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                      ? "bg-cyan-400/[0.10] text-cyan-200 ring-1 ring-inset ring-cyan-300/25"
+                      : "text-slate-300 hover:bg-white/[0.045] hover:text-white"
                   }`}
                 >
-                  {item.label}
+                  <Icon
+                    className={`h-4 w-4 ${isActive ? "text-cyan-300" : "text-slate-500"}`}
+                  />
+                  <span>{item.label}</span>
+                  {isActive && (
+                    <span className="absolute inset-x-4 -bottom-px h-0.5 rounded-full bg-gradient-to-r from-cyan-300 to-blue-400" />
+                  )}
                 </button>
               );
             })}
           </nav>
 
-          {/* Logged-In Profile Avatar Dropdown & Mobile Menu Button */}
-          <div className="flex items-center gap-2.5">
-            {currentUser ? (
-              <div className="relative">
+          {/* Account controls */}
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            {currentUser && (
+              <div className="relative hidden sm:block">
                 <button
+                  type="button"
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                  className="flex items-center gap-2.5 pl-2 pr-3 py-1.5 rounded-full bg-slate-900 border border-cyan-500/40 hover:border-cyan-400 transition-all"
+                  aria-expanded={userDropdownOpen}
+                  className="flex items-center gap-2.5 rounded-full border border-cyan-300/20 bg-slate-900/80 py-1.5 pl-1.5 pr-3 transition hover:border-cyan-300/50 hover:bg-slate-800/90"
                 >
                   {currentUser.photoUrl ? (
                     <img
                       src={currentUser.photoUrl}
                       alt={currentUser.fullName}
-                      className="w-7 h-7 rounded-full object-cover border border-cyan-400"
+                      className="h-8 w-8 rounded-full border border-cyan-300/60 object-cover"
                     />
                   ) : (
-                    <div className="w-7 h-7 rounded-full bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center text-xs font-bold text-slate-950">
-                      {currentUser.fullName?.charAt(0) || 'M'}
-                    </div>
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-cyan-300 to-blue-500 text-sm font-bold text-slate-950">
+                      {currentUser.fullName?.charAt(0) || "M"}
+                    </span>
                   )}
-                  <div className="text-left hidden sm:block">
-                    <p className="text-xs font-bold text-white leading-none">
-                      {currentUser.fullName.split(' ')[0]}
-                    </p>
-                    <p className="text-[10px] text-cyan-400 leading-tight">{currentUser.role || 'Member'}</p>
-                  </div>
+                  <span className="max-w-[115px] text-left">
+                    <span className="block truncate text-xs font-bold leading-tight text-white">
+                      {currentUser.fullName?.split(" ")[0]}
+                    </span>
+                    <span className="mt-0.5 block text-[10px] leading-tight text-cyan-300">
+                      {currentUser.role || "Member"}
+                    </span>
+                  </span>
                 </button>
 
                 {userDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-[#0B132B] border border-cyan-500/30 shadow-2xl py-2 z-50">
-                    <div className="px-4 py-2.5 border-b border-slate-800">
-                      <p className="text-sm font-bold text-white truncate">{currentUser.fullName}</p>
-                      <p className="text-xs text-slate-400 truncate">{currentUser.email}</p>
-                      <span className="inline-block mt-1 px-2 py-0.5 text-[10px] font-semibold rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
+                  <div className="absolute right-0 top-full z-50 mt-3 w-72 overflow-hidden rounded-2xl border border-cyan-300/20 bg-[#0a1122] shadow-2xl shadow-black/50">
+                    <div className="border-b border-white/[0.07] bg-white/[0.025] px-4 py-4">
+                      <p className="truncate text-sm font-bold text-white">
+                        {currentUser.fullName}
+                      </p>
+                      <p className="mt-1 truncate text-xs text-slate-400">
+                        {currentUser.email}
+                      </p>
+                      <span className="mt-2 inline-flex rounded-full border border-cyan-300/20 bg-cyan-300/[0.08] px-2.5 py-1 text-[10px] font-semibold text-cyan-200">
                         ID: {currentUser.rollNumber}
                       </span>
                     </div>
+
                     <button
+                      type="button"
                       onClick={() => {
                         setUserDropdownOpen(false);
-                        navigateTo('profile');
+                        navigateTo("profile");
                       }}
-                      className="w-full px-4 py-2.5 text-left text-xs font-medium text-slate-200 hover:bg-slate-800/80 flex items-center gap-2.5"
+                      className="flex w-full items-center gap-3 px-4 py-3 text-left text-xs font-medium text-slate-200 transition hover:bg-white/[0.05]"
                     >
-                      <UserCheck className="w-4 h-4 text-cyan-400" /> My Profile & Registered Events
+                      <UserCheck className="h-4 w-4 text-cyan-300" />
+                      My Profile &amp; Registered Events
                     </button>
                     <button
+                      type="button"
                       onClick={() => {
                         setUserDropdownOpen(false);
                         setMemberIdCardModalOpen(true);
                       }}
-                      className="w-full px-4 py-2.5 text-left text-xs font-medium text-slate-200 hover:bg-slate-800/80 flex items-center gap-2.5"
+                      className="flex w-full items-center gap-3 px-4 py-3 text-left text-xs font-medium text-slate-200 transition hover:bg-white/[0.05]"
                     >
-                      <Award className="w-4 h-4 text-purple-400" /> Digital Membership ID Card
+                      <Award className="h-4 w-4 text-violet-300" />
+                      Digital Membership ID Card
                     </button>
                     <button
+                      type="button"
                       onClick={() => {
                         setUserDropdownOpen(false);
-                        navigateTo('admin');
+                        navigateTo("admin");
                       }}
-                      className="w-full px-4 py-2.5 text-left text-xs font-medium text-slate-200 hover:bg-slate-800/80 flex items-center gap-2.5"
+                      className="flex w-full items-center gap-3 px-4 py-3 text-left text-xs font-medium text-slate-200 transition hover:bg-white/[0.05]"
                     >
-                      <Shield className="w-4 h-4 text-emerald-400" /> Admin Management Portal
+                      <Shield className="h-4 w-4 text-emerald-300" />
+                      Admin Management Portal
                     </button>
-                    <div className="border-t border-slate-800 my-1" />
+                    <div className="mx-3 border-t border-white/[0.07]" />
                     <button
+                      type="button"
                       onClick={() => {
                         setCurrentUser(null);
                         setUserDropdownOpen(false);
-                        showNotification('Logged out safely.', 'info');
-                        navigateTo('home');
+                        showNotification("Logged out safely.", "info");
+                        navigateTo("home");
                       }}
-                      className="w-full px-4 py-2.5 text-left text-xs font-semibold text-red-400 hover:bg-red-950/30 flex items-center gap-2.5"
+                      className="flex w-full items-center gap-3 px-4 py-3 text-left text-xs font-semibold text-rose-300 transition hover:bg-rose-400/[0.07]"
                     >
-                      <LogOut className="w-4 h-4" /> Sign Out
+                      <LogOut className="h-4 w-4" />
+                      Sign Out
                     </button>
                   </div>
                 )}
               </div>
-            ) : null}
+            )}
 
-            {/* Mobile Hamburger Button */}
+            {/* Mobile menu trigger */}
             <button
+              type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="xl:hidden p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 hover:text-cyan-400"
-              aria-label="Toggle Menu"
+              aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={mobileMenuOpen}
+              className="rounded-xl border border-cyan-300/20 bg-slate-900/80 p-2.5 text-slate-200 transition hover:border-cyan-300/50 hover:text-cyan-200 xl:hidden"
             >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileMenuOpen ? (
+                <X className="h-5 w-5" />
+              ) : (
+                <Menu className="h-5 w-5" />
+              )}
             </button>
           </div>
         </div>
 
-        {/* Mobile Drawer Navigation */}
+        {/* Responsive mobile / tablet drawer */}
         {mobileMenuOpen && (
-          <div className="xl:hidden bg-[#080F24] border-b border-cyan-500/20 px-4 pt-3 pb-6 space-y-3">
-            <div className="pb-2 border-b border-slate-800 flex items-center justify-between">
-              <CollegeLogoBadge
-                customCollegeLogoUrl={branding.collegeLogoUrl}
-                onOpenUploadModal={() => {
-                  setMobileMenuOpen(false);
-                  setLogoUploadModalOpen(true);
-                }}
-                size="sm"
-              />
+          <div className="border-t border-cyan-300/10 bg-[#070d1b] px-4 pb-5 pt-4 shadow-2xl xl:hidden sm:px-6">
+            <div className="mb-4 flex items-center justify-between gap-3 border-b border-white/[0.07] pb-4">
+              <div className="sm:hidden">
+                <CollegeLogoBadge
+                  customCollegeLogoUrl={branding.collegeLogoUrl}
+                  size="sm"
+                />
+              </div>
+              <p className="text-xs font-medium text-slate-400">
+                Explore the DATRIQ community
+              </p>
             </div>
-            <div className="grid grid-cols-2 gap-2">
-              {navItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => navigateTo(item.id)}
-                  className={`px-3.5 py-2.5 rounded-xl text-left text-xs font-semibold transition-all ${
-                    activePage === item.id
-                      ? 'bg-cyan-500 text-slate-950 font-bold'
-                      : 'bg-slate-900/90 text-slate-200 hover:bg-slate-800 border border-slate-800'
-                  }`}
-                >
-                  {item.label}
-                </button>
-              ))}
+
+            <nav aria-label="Mobile navigation" className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {navItems.map((item) => {
+                const isActive = activePage === item.id;
+                const Icon = iconFor(item.id);
+
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => {
+                      navigateTo(item.id);
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`flex min-h-12 items-center gap-2 rounded-xl border px-3 py-3 text-left text-xs font-semibold transition ${
+                      isActive
+                        ? "border-cyan-300/35 bg-cyan-300/10 text-cyan-100"
+                        : item.id === "join"
+                        ? "border-transparent bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950"
+                        : "border-white/[0.07] bg-white/[0.025] text-slate-200 hover:border-cyan-300/20 hover:bg-white/[0.05]"
+                    }`}
+                  >
+                    <Icon className="h-4 w-4 shrink-0" />
+                    <span>{item.label}</span>
+                  </button>
+                );
+              })}
+
+              {currentUser && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigateTo("profile");
+                      setMobileMenuOpen(false);
+                    }}
+                    className="flex min-h-12 items-center gap-2 rounded-xl border border-white/[0.07] bg-white/[0.025] px-3 py-3 text-left text-xs font-semibold text-slate-200"
+                  >
+                    <UserCheck className="h-4 w-4 text-cyan-300" />
+                    My Profile
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMemberIdCardModalOpen(true);
+                      setMobileMenuOpen(false);
+                    }}
+                    className="flex min-h-12 items-center gap-2 rounded-xl border border-white/[0.07] bg-white/[0.025] px-3 py-3 text-left text-xs font-semibold text-slate-200"
+                  >
+                    <Award className="h-4 w-4 text-violet-300" />
+                    Membership ID
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCurrentUser(null);
+                      setMobileMenuOpen(false);
+                      showNotification("Logged out safely.", "info");
+                      navigateTo("home");
+                    }}
+                    className="flex min-h-12 items-center gap-2 rounded-xl border border-rose-400/15 bg-rose-400/[0.05] px-3 py-3 text-left text-xs font-semibold text-rose-300"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Sign Out
+                  </button>
+                </>
+              )}
+
               <button
-                onClick={() => navigateTo('admin')}
-                className="px-3.5 py-2.5 rounded-xl text-left text-xs font-semibold bg-purple-600/20 text-purple-300 border border-purple-500/30 flex items-center gap-1.5"
+                type="button"
+                onClick={() => {
+                  navigateTo("admin");
+                  setMobileMenuOpen(false);
+                }}
+                className="flex min-h-12 items-center gap-2 rounded-xl border border-violet-400/20 bg-violet-400/[0.06] px-3 py-3 text-left text-xs font-semibold text-violet-200"
               >
-                <Shield className="w-3.5 h-3.5" /> Admin Dashboard
+                <Shield className="h-4 w-4" />
+                Admin Dashboard
               </button>
-            </div>
+            </nav>
           </div>
         )}
       </header>

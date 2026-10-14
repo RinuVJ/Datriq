@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { X, KeyRound } from 'lucide-react';
+import { X } from 'lucide-react';
 import { DatriqLogo, CollegeLogoBadge } from './components.jsx';
-import { compressImageFile, hashPassword } from './utils.js';
+import { compressImageFile } from './utils.js';
 
 export function LogoUploadModal({ branding, onClose, onSave, showNotification }) {
   return (
@@ -57,7 +57,6 @@ export function LogoUploadModal({ branding, onClose, onSave, showNotification })
             <div className="h-28 rounded-xl bg-[#050914] border border-slate-800 flex items-center justify-center p-3">
               <CollegeLogoBadge
                 customCollegeLogoUrl={branding.collegeLogoUrl}
-                onOpenUploadModal={() => {}}
                 size="md"
               />
             </div>
@@ -194,96 +193,6 @@ export function EventRegistrationModal({ event, currentUser, onClose, onSubmit }
               Confirm Seat Registration
             </button>
           </div>
-        </form>
-      </div>
-    </div>
-  );
-}
-
-export function ForgotPasswordModal({ registeredMembers, onClose, onResetPassword }) {
-  const [email, setEmail] = useState('');
-  const [rollNumber, setRollNumber] = useState('');
-  const [newPass, setNewPass] = useState('');
-  const [error, setError] = useState('');
-
-  const handleReset = async (e) => {
-    e.preventDefault();
-    setError('');
-    const target = registeredMembers.find(
-      (m) =>
-        m.email.toLowerCase() === email.trim().toLowerCase() &&
-        m.rollNumber.toLowerCase() === rollNumber.trim().toLowerCase()
-    );
-    if (!target) {
-      setError('No matching account found with both that Email and Student Roll Number.');
-      return;
-    }
-    if (newPass.length < 6) {
-      setError('New password must be at least 6 characters.');
-      return;
-    }
-    const newHash = await hashPassword(newPass);
-    await onResetPassword(target.id, newHash);
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-[#0B132B] border border-cyan-500/40 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-          <h3 className="text-lg font-bold text-white flex items-center gap-2">
-            <KeyRound className="w-5 h-5 text-cyan-400" /> Password Reset Portal
-          </h3>
-          <button onClick={onClose} className="text-slate-400 hover:text-white">
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        {error && (
-          <div className="p-3 rounded-xl bg-red-950/80 border border-red-500/40 text-red-200 text-xs">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleReset} className="space-y-3.5 text-xs">
-          <div>
-            <label className="block text-slate-300 font-semibold mb-1">Registered Email *</label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white"
-            />
-          </div>
-          <div>
-            <label className="block text-slate-300 font-semibold mb-1">
-              Verify Student ID / Roll Number *
-            </label>
-            <input
-              type="text"
-              required
-              value={rollNumber}
-              onChange={(e) => setRollNumber(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white uppercase"
-            />
-          </div>
-          <div>
-            <label className="block text-slate-300 font-semibold mb-1">New Password *</label>
-            <input
-              type="password"
-              required
-              placeholder="Minimum 6 characters"
-              value={newPass}
-              onChange={(e) => setNewPass(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white"
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full py-3 rounded-xl bg-cyan-500 text-slate-950 font-bold"
-          >
-            Verify & Reset Password
-          </button>
         </form>
       </div>
     </div>

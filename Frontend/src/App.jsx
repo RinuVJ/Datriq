@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { Database, Brain, Cpu, Code2, BarChart3, Trophy, Image as ImageIcon, Mail, Phone, MapPin, Shield, CheckCircle2, AlertCircle, ChevronRight, Upload, X, Settings } from 'lucide-react';
+import { Database, Brain, Cpu, Code2, BarChart3, Trophy, Image as ImageIcon, Mail, Phone, MapPin, Shield, CheckCircle2, AlertCircle, ChevronRight, X, Settings } from 'lucide-react';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from 'firebase/firestore';
@@ -12,11 +12,10 @@ import { EventsPage } from './pages/events.jsx';
 import { EventCalendarPage } from './pages/eventscalender.jsx';
 import { GalleryPage } from './pages/gallery.jsx';
 import { JoinClubPage } from './pages/join.jsx';
-import { LoginPage } from './pages/login.jsx';
 import { MemberProfilePage } from './pages/profile.jsx';
 import { ContactPage } from './pages/contact.jsx';
-import { AdminDashboard } from './pages/adminlogin.jsx';
-import { LogoUploadModal, EventRegistrationModal, ForgotPasswordModal, DigitalIdCardModal } from './pages/modals.jsx';
+import { AdminDashboard, AdminPasswordGate } from './pages/adminlogin.jsx';
+import { EventRegistrationModal, DigitalIdCardModal } from './pages/modals.jsx';
 import { Navbar } from './Navbar.jsx';
 
 const appId = globalThis.__app_id || 'datriq-sju-club';
@@ -49,7 +48,7 @@ export default function App() {
 
   // Logged-in Club Member / Admin Session State
   const [currentUser, setCurrentUser] = useState(null);
-  const [isAdminMode, setIsAdminMode] = useState(false);
+  const [adminAuthenticated, setAdminAuthenticated] = useState(false);
 
   // Core Database Collections State (Synced with Firestore)
   const [branding, setBranding] = useState({
@@ -72,11 +71,9 @@ export default function App() {
   const [inquiries, setInquiries] = useState([]);
 
   // Modals State
-  const [logoUploadModalOpen, setLogoUploadModalOpen] = useState(false);
   const [selectedEventForReg, setSelectedEventForReg] = useState(null);
   const [selectedGalleryItem, setSelectedGalleryItem] = useState(null);
   const [rulesModalOpen, setRulesModalOpen] = useState(false);
-  const [forgotPasswordModalOpen, setForgotPasswordModalOpen] = useState(false);
   const [memberIdCardModalOpen, setMemberIdCardModalOpen] = useState(false);
 
   // Helper to show non-blocking toast notifications (Never uses alert())
@@ -454,7 +451,7 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Menu Configuration (Exact 9 required menus)
+  // Public navigation items
   const navItems = [
     { id: 'home', label: 'Home' },
     { id: 'about', label: 'About DATRIQ' },
@@ -463,7 +460,6 @@ export default function App() {
     { id: 'calendar', label: 'Event Calendar' },
     { id: 'gallery', label: 'Gallery' },
     { id: 'join', label: 'Join the Club' },
-    ...(currentUser ? [] : [{ id: 'login', label: 'Member Login' }]),
     { id: 'contact', label: 'Contact Us' }
   ];
 
@@ -510,8 +506,6 @@ export default function App() {
         setMobileMenuOpen={setMobileMenuOpen}
         userDropdownOpen={userDropdownOpen}
         setUserDropdownOpen={setUserDropdownOpen}
-        setLogoUploadModalOpen={setLogoUploadModalOpen}
-        setIsAdminMode={setIsAdminMode}
         setMemberIdCardModalOpen={setMemberIdCardModalOpen}
         setCurrentUser={setCurrentUser}
         showNotification={showNotification}
@@ -534,7 +528,6 @@ export default function App() {
             navigateTo={navigateTo}
             onSelectEventForReg={setSelectedEventForReg}
             onSelectGalleryItem={setSelectedGalleryItem}
-            onOpenLogoModal={() => setLogoUploadModalOpen(true)}
             onSubmitInquiry={async (inq) => {
               const id = `inq-${Date.now()}`;
               const payload = { ...inq, id, createdAt: new Date().toISOString() };
@@ -553,7 +546,6 @@ export default function App() {
             liveStats={liveStats}
             projects={projects}
             navigateTo={navigateTo}
-            onOpenLogoModal={() => setLogoUploadModalOpen(true)}
           />
         )}
 
@@ -561,7 +553,7 @@ export default function App() {
           <TeamPage
             teamMembers={teamMembers}
             registeredMembers={registeredMembers}
-            isAdmin={isAdminMode || currentUser?.isAdmin}
+            isAdmin={adminAuthenticated}
             onSaveMember={saveTeamMember}
             onDeleteMember={deleteTeamMember}
             onReorderMember={reorderTeamMember}
@@ -611,22 +603,6 @@ export default function App() {
               showNotification(`Welcome to DATRIQ, ${newMember.fullName}! Your membership is active.`);
               navigateTo('profile');
             }}
-            navigateTo={navigateTo}
-            showNotification={showNotification}
-          />
-        )}
-
-        {activePage === 'login' && (
-          <LoginPage
-            registeredMembers={registeredMembers}
-            teamMembers={teamMembers}
-            onLoginSuccess={(member) => {
-              setCurrentUser(member);
-              showNotification(`Welcome back, ${member.fullName}!`);
-              navigateTo('profile');
-            }}
-            onOpenForgotPassword={() => setForgotPasswordModalOpen(true)}
-            navigateTo={navigateTo}
             showNotification={showNotification}
           />
         )}
@@ -667,7 +643,14 @@ export default function App() {
         )}
 
         {activePage === 'admin' && (
+          !adminAuthenticated ? (
+            <AdminPasswordGate onUnlock={() => setAdminAuthenticated(true)} />
+          ) : (
           <AdminDashboard
+            onLockAdmin={() => {
+              setAdminAuthenticated(false);
+              navigateTo('home');
+            }}
             branding={branding}
             onSaveBranding={saveBrandingSettings}
             teamMembers={teamMembers}
@@ -712,6 +695,7 @@ export default function App() {
             inquiries={inquiries}
             showNotification={showNotification}
           />
+          )
         )}
       </main>
 
@@ -727,7 +711,6 @@ export default function App() {
               <div className="pt-1">
                 <CollegeLogoBadge
                   customCollegeLogoUrl={branding.collegeLogoUrl}
-                  onOpenUploadModal={() => setLogoUploadModalOpen(true)}
                   size="sm"
                 />
               </div>
@@ -801,12 +784,6 @@ export default function App() {
               </p>
               <div className="pt-3 flex items-center gap-2">
                 <button
-                  onClick={() => setLogoUploadModalOpen(true)}
-                  className="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-cyan-500/30 text-xs font-medium flex items-center gap-1.5"
-                >
-                  <Upload className="w-3.5 h-3.5" /> Logo Settings
-                </button>
-                <button
                   onClick={() => navigateTo('admin')}
                   className="px-3 py-1.5 rounded-lg bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 text-xs font-medium flex items-center gap-1.5"
                 >
@@ -835,17 +812,7 @@ export default function App() {
       {/* GLOBAL MODALS */}
       {/* ==================================================================== */}
 
-      {/* 1. Admin Dual Logo Upload Modal */}
-      {logoUploadModalOpen && (
-        <LogoUploadModal
-          branding={branding}
-          onClose={() => setLogoUploadModalOpen(false)}
-          onSave={saveBrandingSettings}
-          showNotification={showNotification}
-        />
-      )}
-
-      {/* 2. Event Registration Modal */}
+      {/* 1. Event Registration Modal */}
       {selectedEventForReg && (
         <EventRegistrationModal
           event={selectedEventForReg}
@@ -945,32 +912,7 @@ export default function App() {
         </div>
       )}
 
-      {/* 5. Forgot Password / Reset Modal */}
-      {forgotPasswordModalOpen && (
-        <ForgotPasswordModal
-          registeredMembers={registeredMembers}
-          onClose={() => setForgotPasswordModalOpen(false)}
-          onResetPassword={async (memberId, newPasswordHash) => {
-            setRegisteredMembers((prev) =>
-              prev.map((m) => (m.id === memberId ? { ...m, passwordHash: newPasswordHash } : m))
-            );
-            if (db && firebaseUser) {
-              const target = registeredMembers.find((m) => m.id === memberId);
-              if (target) {
-                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'registered_members', memberId), {
-                  ...target,
-                  passwordHash: newPasswordHash
-                });
-              }
-            }
-            showNotification('Password reset successfully! You can now log in with your new password.');
-            setForgotPasswordModalOpen(false);
-          }}
-          showNotification={showNotification}
-        />
-      )}
-
-      {/* 6. Digital Member ID Card Modal */}
+      {/* 5. Digital Member ID Card Modal */}
       {memberIdCardModalOpen && currentUser && (
         <DigitalIdCardModal
           member={currentUser}

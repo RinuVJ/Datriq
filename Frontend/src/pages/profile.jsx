@@ -9,12 +9,12 @@ export function MemberProfilePage({
   if (!currentUser) {
     return (
       <div className="max-w-xl mx-auto px-4 py-20 text-center space-y-4">
-        <p className="text-lg font-bold text-white">Please log in to view your profile.</p>
+        <p className="text-lg font-bold text-white">Join DATRIQ to access your member profile.</p>
         <button
-          onClick={() => navigateTo('login')}
+          onClick={() => navigateTo('join')}
           className="px-6 py-2.5 rounded-xl bg-cyan-500 text-slate-950 font-bold text-xs"
         >
-          Go to Member Login
+          Join the Club
         </button>
       </div>
     );
